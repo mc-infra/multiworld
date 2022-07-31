@@ -5,8 +5,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.server.world.ServerWorld;
 
 import xyz.nucleoid.fantasy.Fantasy;
@@ -22,13 +22,18 @@ public class FabricWorldCreator implements ICreator {
         MultiworldMod.setICreator(new FabricWorldCreator());
     }
     
-    public ServerWorld create_world(String id, RegistryKey<DimensionType> dim, ChunkGenerator gen, Difficulty dif) {
+    public ServerWorld create_world(String id, RegistryKey<DimensionType> dim, ChunkGenerator gen, Difficulty dif, GameRules gr) {
         RuntimeWorldConfig config = new RuntimeWorldConfig()
                 .setDimensionType(dim)
                 .setGenerator(gen)
-                .setDifficulty(Difficulty.NORMAL)
+                .setDifficulty(dif)
+                .setGameRule(GameRules.RANDOM_TICK_SPEED, gr.getInt(GameRules.RANDOM_TICK_SPEED))
+                .setGameRule(GameRules.DO_FIRE_TICK, gr.getBoolean(GameRules.DO_FIRE_TICK))
+                .setGameRule(GameRules.DO_MOB_SPAWNING, gr.getBoolean(GameRules.DO_MOB_SPAWNING))
+                .setGameRule(GameRules.DO_DAYLIGHT_CYCLE, gr.getBoolean(GameRules.DO_DAYLIGHT_CYCLE))
                 ;
 
+        
         Fantasy fantasy = Fantasy.get(MultiworldMod.mc);
         RuntimeWorldHandle worldHandle = fantasy.getOrOpenPersistentWorld(new Identifier(id), config);
         return worldHandle.asWorld();

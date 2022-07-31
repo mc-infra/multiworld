@@ -11,6 +11,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
@@ -48,13 +49,18 @@ public class CreateCommand {
         
         if (args[2].contains("END")) {
             gen = mc.getWorld(World.END).getChunkManager().getChunkGenerator().withSeed(seed);
-            dim = DimensionType.THE_END_REGISTRY_KEY;
+            dim = DimensionType.
+            THE_END_REGISTRY_KEY;
         }
+
+        GameRules gr = mc.getGameRules();
         
         String arg1 = args[1];
         if (arg1.indexOf(':') == -1) arg1 = "multiworld:" + arg1;
+
+        Difficulty difficulty = mc.getSaveProperties().getDifficulty();
         
-        MultiworldMod.create_world(arg1, dim, gen, Difficulty.NORMAL);
+        MultiworldMod.create_world(arg1, dim, gen, difficulty, gr);
 
         /*RuntimeWorldConfig config = new RuntimeWorldConfig()
                 .setDimensionType(dim)
